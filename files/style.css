@@ -1,0 +1,11 @@
+* {
+    font-family: "Times New Roman", Times, serif;
+}
+
+.red.tui-grid-cell {
+    background-color: #ffe5e5;
+}
+
+.yellow.tui-grid-cell {
+    background-color: #fffdeb;
+}
