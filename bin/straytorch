@@ -1,4 +1,4 @@
 #!/bin/bash
 
 export STRAYTORCH_HOME="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )/.."
-python $STRAYTORCH_HOME/straytorch.py
+python $STRAYTORCH_HOME/straytorch.py "${@}"
