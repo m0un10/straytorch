@@ -34,6 +34,14 @@ else:
   print("unsupported file type: "+args.config)
   sys.exit(1)
 
+# set defaults
+if not 'grid' in report_config:
+  report_config['grid'] = {}
+if not 'bodyHeight' in report_config['grid']:
+  report_config['grid']['bodyHeight'] = 'auto'
+if not 'filters' in report_config:
+  report_config['filters'] = {}
+
 def flatten_json(y):
     out = {}
     def flatten(x, name=''):
@@ -108,11 +116,6 @@ else:
   print(report_type + " is not a supported report type.")
   sys.exit(1)
 
-if not 'grid' in report_config:
-  report_config['grid'] = {}
-if not 'bodyHeight' in report_config['grid']:
-  report_config['grid']['bodyHeight'] = 'auto'
-
 if "outputDirectory" in report_config['report']:
     output_dir = report_config['report']['outputDirectory']
 else:
@@ -137,11 +140,28 @@ for line in fin:
 fin.close()
 fout.close()
 
+def include(item):
+  for key in item:
+    if key in report_config['filters']:
+      if not re.match(report_config['filters'][key], item[key]):
+        return False
+  return True
+
+if report_config['filters'] != {}:
+  final_data = []
+  for item in sorted_data:
+    if include(item):
+      final_data.append(item)
+else:
+  final_data = sorted_data
+
 text_file = open(output_dir+"/generated.js", "w")
 if isinstance(report_config['grid']['bodyHeight'], int):
   text_file.write("const gridBodyHeight=%s\n" % report_config['grid']['bodyHeight'])
+else:
+  text_file.write("const gridBodyHeight='auto'\n")
 text_file.write('const columns=%s\n' % json.dumps(columns_data, indent=2))
-text_file.write('const data=%s\n' % json.dumps(sorted_data, indent=2))
+text_file.write('const data=%s\n' % json.dumps(final_data, indent=2))
 text_file.close()
 
 print("report generated at "+output_dir)
