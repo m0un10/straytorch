@@ -13,26 +13,40 @@ import re
 
 parser = argparse.ArgumentParser(description='Discover deep insights into multi-instance data differences.')
 parser.add_argument('-c', '--config', help='location of configuration')
+parser.add_argument('directory', metavar='DIR', type=str, 
+                    help='an integer for the accumulator')
+parser.add_argument('-n', '--name', default="Straytorch Report", help='name of report')
+parser.add_argument('-o', '--output', default="output", help='location of report')
 
 args = parser.parse_args()
 
-if args.config is None:
+if not args.directory:
   parser.print_help()
   sys.exit(1)
 
 home = os.environ['STRAYTORCH_HOME']
 fallback_output_home = expanduser("~") + "/.straytorch"
 
-if args.config.endswith(".yaml") or args.config.endswith(".yml"):
-  with open(args.config, 'r') as stream:
-      try:
-          report_config = yaml.safe_load(stream)
-      except yaml.YAMLError as exc:
-        print("invalid yaml in "+args.config+ ": "+str(exc))
-        sys.exit(1)
+if args.config is not None:
+  if args.config.endswith(".yaml") or args.config.endswith(".yml"):
+    with open(args.config, 'r') as stream:
+        try:
+            report_config = yaml.safe_load(stream)
+        except yaml.YAMLError as exc:
+          print("invalid yaml in "+args.config+ ": "+str(exc))
+          sys.exit(1)
+  else:
+    print("unsupported file type: "+args.config)
+    sys.exit(1)
 else:
-  print("unsupported file type: "+args.config)
-  sys.exit(1)
+  report_config = {
+    'report': {
+      'type': 'fine',
+      'autoTimestamp': True,
+      'name': args.name,
+      'outputDirectory': args.output
+    }
+  }
 
 # set defaults
 if not 'grid' in report_config:
@@ -82,7 +96,7 @@ columns_data = [
   }
 ]
 
-for filename in os.listdir('.'):
+for filename in os.listdir(args.directory):
   match = re.match('(?P<name>.*).json', filename)
   if match:
     columns_data.append({
@@ -95,7 +109,7 @@ for filename in os.listdir('.'):
         'showClearBtn': True
       }
     })
-    with open(filename) as f:
+    with open(args.directory+"/"+filename) as f:
       data = json.load(f)
       source_data[os.path.splitext(filename)[0]] = flatten_json(data)
       number_of_columns += 1
@@ -164,4 +178,4 @@ text_file.write('const columns=%s\n' % json.dumps(columns_data, indent=2))
 text_file.write('const data=%s\n' % json.dumps(final_data, indent=2))
 text_file.close()
 
-print("report generated at "+output_dir)
+print("report generated in '"+output_dir+ "' directory")
