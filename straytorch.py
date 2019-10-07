@@ -45,16 +45,24 @@ else:
       'autoTimestamp': True,
       'name': args.name,
       'outputDirectory': args.output
+    },
+    'input': {
+      'expression': '(?P<name>.*).json'
     }
   }
 
 # set defaults
+# TODO: use a schema instead
 if not 'grid' in report_config:
   report_config['grid'] = {}
 if not 'bodyHeight' in report_config['grid']:
   report_config['grid']['bodyHeight'] = 'auto'
 if not 'filters' in report_config:
   report_config['filters'] = {}
+if not 'input' in report_config:
+  report_config['input'] = {
+    'expression': '(?P<name>.*).json'
+  }
 
 def flatten_json(y):
     out = {}
@@ -97,7 +105,7 @@ columns_data = [
 ]
 
 for filename in os.listdir(args.directory):
-  match = re.match('(?P<name>.*).json', filename)
+  match = re.match(report_config['input']['expression'], filename)
   if match:
     columns_data.append({
       'header': match.group('name'),
@@ -146,10 +154,13 @@ fout = open(output_dir+"/index.html", "wt")
 for line in fin:
     report_config
     l = line.replace('REPORT_NAME', report_config['report']['name']) 
-    if report_config['report']['autoTimestamp']:
+    if 'autoTimestamp' in report_config['report']:
       l = l.replace('TIMESTAMP',  datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     else:
-      l = l.replace('TIMESTAMP', '')       
+      timestamp = ''
+      if 'timestamp' in report_config['report']:
+        timestamp = report_config['report']['timestamp']
+      l = l.replace('TIMESTAMP', str(timestamp))     
     fout.write(l)
 fin.close()
 fout.close()
@@ -173,7 +184,7 @@ text_file = open(output_dir+"/generated.js", "w")
 if isinstance(report_config['grid']['bodyHeight'], int):
   text_file.write("const gridBodyHeight=%s\n" % report_config['grid']['bodyHeight'])
 else:
-  text_file.write("const gridBodyHeight='auto'\n")
+  text_file.write("const gridBodyHeight='%s'\n" % report_config['grid']['bodyHeight'])
 text_file.write('const columns=%s\n' % json.dumps(columns_data, indent=2))
 text_file.write('const data=%s\n' % json.dumps(final_data, indent=2))
 text_file.close()
