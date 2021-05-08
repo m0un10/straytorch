@@ -10,12 +10,14 @@ tree data/
 ├── tst.yml
 └── prd.yml
 
+# generate your report
 straytorch -c report.yml data/
 ```
 
 Once your report is generated you can server it up with the HTTP server of your choice
 
 ```
+# serve your report
 python -m SimpleHTTPServer 4444
 open http://localhost:4444
 ```
