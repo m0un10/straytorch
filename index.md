@@ -1,7 +1,9 @@
 
-`straytorch` provides an interactive tabular dashboard for viewing difference reports generated from multiple data sources.
+`straytorch` is an open-source report generation tool for providing interactive tabular dashboards that assist with data difference comparison from multiple data sources.
 
 With straytorch, you point it at your directory of JSON files and it will generate a HTML report where you can inspect and find differences.
+
+## Getting started
 
 ```
 # export your data (e.g. from target environments)
@@ -28,3 +30,7 @@ open http://localhost:4444
 - Comparing versions of data or an environment at points in time
 - Detecting configuration drift for an environment since it was last updated
 - Finding differences in terraform state files or any other json-based data format
+
+## Got a question or suggestion?
+
+Please feel free to [start a discussion](https://github.com/m0un10/straytorch/discussions).
