@@ -4,7 +4,12 @@
 
 ## Why straytorch?
 
-There are many existing tools for visualising differences in source code and these tools are often extended to perform diffs of data files such as JSON and YAML. Unfortunately, these tools operate on the source file contents (not the sorted content) which means they generally provide poor insights in cases where the data is unsorted. Furthermore, as the number of comparison sources grow beyond 2 files, it becomes difficult to gain insight into what differences are important. Because of this, existing tools are often poor candidates for finding different across a large number of instances such as a use case where we want to see what is difference across a dev, test, UAT, staging and production environment or, when we want to see how data has changed over a long period of time.
+There are many existing tools for visualising differences in source code and these tools are often extended to perform diffs of data files such as JSON and YAML. Unfortunately, these tools have a number of drawbacks:
+
+- they operate on the raw file contents and provide poor insights in cases where the data is unsorted. 
+- they assume that the consumer understands the source data structures even if they are just interested in the values
+- they don't supporting comparing more than two things or become unwieldy when they do.
+- they are poor candidates for finding different across a large number of instances such as a use case where we want to see what is difference across a dev, test, UAT, staging and production environment or, when we want to see how data has changed over a long period of time
 
 `straytorch` addresses these issues by:
 
