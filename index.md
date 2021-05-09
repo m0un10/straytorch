@@ -43,7 +43,7 @@ open http://localhost:4444
 ## Use cases
 
 - Comparing configuration across environments and finding inconsistencies
-- Comparing versions of data or an environment at points in time
+- Comparing differente versions of data or data at points of time
 - Detecting configuration drift for an environment since it was last updated
 - Finding differences in terraform state files or any other json-based data format
 
