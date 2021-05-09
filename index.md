@@ -17,6 +17,13 @@ There are many existing tools for visualising differences in source code and the
 - providing interactive features for searching, filtering and sorting against any field
 - allowing for reports to be customised to only display what is important
 
+## Use cases
+
+- Comparing configuration across environments and finding inconsistencies
+- Comparing different versions of data or data at points of time
+- Detecting configuration drift for an environment since it was last updated
+- Finding differences in terraform state files or any other json-based data format
+
 ## Getting started
 
 With straytorch, you point it at your directory of data files and it will generate an interactive dashboard where you can inspect and find differences in the data.
@@ -39,13 +46,6 @@ Once your report is generated you can server it up with the HTTP server of your 
 python -m SimpleHTTPServer 4444
 open http://localhost:4444
 ```
-
-## Use cases
-
-- Comparing configuration across environments and finding inconsistencies
-- Comparing differente versions of data or data at points of time
-- Detecting configuration drift for an environment since it was last updated
-- Finding differences in terraform state files or any other json-based data format
 
 ## Got a question or suggestion?
 
